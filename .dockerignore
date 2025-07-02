@@ -1,0 +1,28 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+
+# Audio uploads / temp files
+*.wav
+*.m4a
+
+# Environment files
+.env
+.env.*
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Git
+.git/
+.gitignore
+
+# IDE / editor settings
+.vscode/
+.idea/
+
+# Logs
+*.log
