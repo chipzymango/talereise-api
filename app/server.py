@@ -1,6 +1,10 @@
 from fastapi import FastAPI, UploadFile, File
 from transformers import BertTokenizerFast, BertForTokenClassification  
 import os, openai, tempfile
+from process_ner import correct_stop_place
+from fetch_stops import fetch_stop_names
+
+stop_list = fetch_stop_names("oslo_akershus_stops_export")
 
 # use whisper api for now
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -30,7 +34,7 @@ async def analyze(file: UploadFile = File(...)):
         result = openai.Audio.transcribe("whisper-1", f, response_format="text", language="no")
         print("result: " + str(result))
 
-    text = result
+    text = result.replace(".", "") # temp fix to ensure model doesn't assign . as route number. model needs to be fine tuned further to fix this at some point
 
     # ------------------ NER MODEL: receive text, return entities
     route_name, route_number, stop_place = "", "", ""
@@ -65,6 +69,10 @@ async def analyze(file: UploadFile = File(...)):
             route_number = token
         elif tag == "B-STOPPLACE" or tag == "I-STOPPLACE":
             stop_place = stop_place + " " + token
+
+    if stop_place != "":
+        # attempt to correct Whisper pronunciation mistakes in norwegian stop place names
+        stop_place = correct_stop_place(stop_place, stop_list)
 
     if route_name == "":
         route_name = "token not found"

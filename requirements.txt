@@ -4,3 +4,5 @@ transformers==4.44.0
 torch==2.4.0
 openai==0.28.0
 python-multipart==0.0.20
+rapidfuzz==3.9.7
+requests==2.29.0
