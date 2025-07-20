@@ -24,4 +24,5 @@ class DialogState:
     def to_json(self): # to be used in llm prompt
         return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
     
-    
+    def is_ready(self): # ready meaning the necessary info required to perform api requests are provided
+        return len(self.missing_slots) == 0

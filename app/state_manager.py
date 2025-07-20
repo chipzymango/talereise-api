@@ -43,4 +43,26 @@ def get_updated_state(user_input, state): # take user input and current state an
     state.slots = updated_state_dict.get("slots", {})
     state.missing_slots = [k for k, v in state.slots.items() if v is None] # list of unidentified slots (f.ex. goal requires destination but not destination is not defined by user)
 
-    return state # return the state with the new data 
+    return state # return the state with the new data
+
+def create_response(state):
+    if state.is_ready():
+        return "No missing slots, ready to perform api requests"
+    else:
+        system_prompt = f"""
+        Du er en llm i en kollektivtransport-taleassistent app som er laget for å kunne finne fram til kollektivreise-relatert info, liknende den type info man kan finne på Ruter / Entur appen.
+        Du har fått en dialog state som inneholder brukerens mål og tilleggsinformasjon (slots) som kreves for å nå ønsket mål. Her finnes det noen missing slots, altså nødvendig informasjon som brukeren ikke har oppgitt for å kunne nå målet.
+        Returner en høflig forespørsel til brukeren om å oppgi den manglende informasjonen som ligger i missing_slots i dialog staten:
+        Nåværende dialog state:
+        {state.to_json()}
+        """
+        chat_completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        temperature=0,
+        messages=[
+            system_prompt
+        ]
+    )
+        llm_response = chat_completion.choices[0].message.content.strip()
+
+        return str(json.loads(llm_response))
