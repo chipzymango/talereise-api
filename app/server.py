@@ -17,6 +17,7 @@ async def analyze(file: UploadFile = File(...), session_id = "test_session"):
     state = get_state(session_id) # create or retrieve a dialog state to keep track of the conversation    
     updated_state = get_updated_state(transcribed_text, state) # update current state with the updated state from llm
     system_reply = create_response(updated_state) # llm response based on the updated state
+    updated_state.log_turn(transcribed_text, system_reply) # register user input and system response to build conversation history context for llm
     
     return {
         str("LLM Response: " + system_reply)
