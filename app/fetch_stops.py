@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 import os
-from utils import download_and_extract
+from app.utils import download_and_extract
 
 def fetch_stop_names(save_path):
 

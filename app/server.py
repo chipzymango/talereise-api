@@ -1,7 +1,7 @@
 import os, openai
 from fastapi import FastAPI, UploadFile, File
-from transcription import transcribe_audio
-from state_manager import get_state, get_updated_state, create_response
+from app.transcription import transcribe_audio
+from app.state_manager import get_state, get_updated_state, create_response
 
 app = FastAPI()
 

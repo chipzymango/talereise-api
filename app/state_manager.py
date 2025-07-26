@@ -1,6 +1,6 @@
 import openai
 import json
-from dialog_manager import DialogState
+from app.dialog_manager import DialogState
 
 session_states = {}
 
