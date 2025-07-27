@@ -2,7 +2,7 @@ name: Build API
 
 on:
   push:
-    branches: [ master ]
+    branches: [ "*" ]
   
 jobs:
   build:
