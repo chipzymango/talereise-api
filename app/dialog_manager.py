@@ -7,6 +7,7 @@ class DialogState:
         self.missing_slots = {}
         self.current_location = [0, 0] # default point of departure
         self.history = [] # keeps track of user input and system replies to provide context to llm
+        self.reply_context = {} # context for llm when responding to user, mostly the returned data from entur api
 
     def log_turn(self, user_input, system_reply):
         self.history.append({"role": "user", "text": user_input})
@@ -18,7 +19,8 @@ class DialogState:
             "slots": self.slots,
             "missing_slots": self.missing_slots,
             "current_location": self.current_location,
-            "history": self.history
+            "history": self.history,
+            "reply_context": self.reply_context
         }
     
     def to_json(self): # to be used in llm prompt
