@@ -6,3 +6,4 @@ openai==0.28.0
 python-multipart==0.0.20
 rapidfuzz==3.9.7
 requests==2.29.0
+pandas==2.0.3
