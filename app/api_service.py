@@ -27,40 +27,41 @@ def get_next_departure(stop_id, line_number, front_text=None):
     base_url = "https://api.entur.io/journey-planner/v3/graphql"
 
     query = """
-    {
-    stopPlace(id: "NSR:StopPlace:{0}") {
-        id
-        name
-        estimatedCalls(timeRange: 72100, numberOfDepartures: 10) {     
-        realtime
-        aimedArrivalTime
-        aimedDepartureTime
-        expectedArrivalTime
-        expectedDepartureTime
-        actualArrivalTime
-        actualDepartureTime
-        date
-        forBoarding
-        forAlighting
-        destinationDisplay {
-            frontText
-        }
-        quay {
+    {{
+        stopPlace(id: "{0}") {{
             id
-        }
-        serviceJourney {
-            journeyPattern {
-            line {
-                id
-                name
-                transportMode
-            }
-            }
-        }
-        }
-    }
-    }
+            name
+            estimatedCalls(timeRange: 72100, numberOfDepartures: 10) {{     
+                realtime
+                aimedArrivalTime
+                aimedDepartureTime
+                expectedArrivalTime
+                expectedDepartureTime
+                actualArrivalTime
+                actualDepartureTime
+                date
+                forBoarding
+                forAlighting
+                destinationDisplay {{
+                    frontText
+                }}
+                quay {{
+                    id
+                }}
+                serviceJourney {{
+                    journeyPattern {{
+                        line {{
+                            id
+                            name
+                            transportMode
+                        }}
+                    }}
+                }}
+            }}
+        }}
+    }}
     """.format(stop_id)
+
 
     headers = {
         "ET-Client-Name": "chipzymango-talereise"
@@ -74,13 +75,14 @@ def get_next_departure(stop_id, line_number, front_text=None):
 
     if response.status_code == 200:
         data = response.json()
-        stop_place = data.get("stopPlace", {}):
+        #print("data: \n" + str(data))
+        stop_place = data.get("data", {}).get("stopPlace")
         if stop_place:
             stop_name = stop_place.get("name", "undefined")
             results = stop_place.get("estimatedCalls", [])
             if results: # if there were results
-                first_departure = results[0]["expectedDepartureTime"]
-                print("first departure on " + str(stop_name) + " is: " + str(first_departure))
+                first_departure = results[0].get("expectedDepartureTime", "N/A")
+                #print("first departure on " + str(stop_name) + " is: " + str(first_departure))
                 return first_departure
             else:
                 print("No departure timings were found from this query.")
