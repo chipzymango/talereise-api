@@ -1,11 +1,9 @@
-from rapidfuzz import process
+from rapidfuzz import process, fuzz
 
 def correct_stop_place(stop, stop_list, threshold=65):
-    match, score, _ = process.extractOne(stop, stop_list)
+    match, score, _ = process.extractOne(stop, stop_list,scorer=fuzz.ratio)
 
     if score >= threshold:
-        print("Match found! Corrected to: " + match + ", score: " + str(score))
-        return match
+        return match # correcting the word to the match found
     else:
-        print("Match not found! Remaining at: " + stop + ", score: " + str(score))
         return stop

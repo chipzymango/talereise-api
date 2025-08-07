@@ -7,11 +7,16 @@ class DialogState:
         self.missing_slots = {}
         self.current_location = [0, 0] # default point of departure
         self.history = [] # keeps track of user input and system replies to provide context to llm
-        self.reply_context = {} # context for llm when responding to user, mostly the returned data from entur api
+        self.reply_context = {} # a dict containing key words or api data such as a departure time for llm to generate response with
 
-    def log_turn(self, user_input, system_reply):
-        self.history.append({"role": "user", "text": user_input})
-        self.history.append({"role": "system", "text": system_reply})
+    def log_turn(self, user_input=None, system_reply=None):
+        if user_input is not None:
+            self.history.append({"role": "user", "text": user_input})
+        if system_reply is not None:
+            self.history.append({"role": "system", "text": system_reply})
+
+    def clear_state(self):
+        self.__init__()
     
     def to_dict(self): # convert the dialog state to a dict for easier access 
         return {
@@ -26,5 +31,5 @@ class DialogState:
     def to_json(self): # to be used in llm prompt
         return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
     
-    def is_ready(self): # ready meaning the necessary info required to perform api requests are provided
+    def is_ready(self): # ready meaning whether the necessary info required to perform api requests are provided yet
         return len(self.missing_slots) == 0
