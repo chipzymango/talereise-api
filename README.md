@@ -1,24 +1,30 @@
 # TaleReise API
 
-API for TaleReise which uses OpenAI Whisper and a fine-tuned BERT NER model to interpret route names and stops.
+An API for a potential speech-assistant TaleReise to handle questions from audio input about departure times of public transport through AI models.
+
+<p align="center">
+    <img src='./img/talereise.png?'>
+</p>
 
 ## Features
 
-- Transcribe Norwegian speech to text via the OpenAI Whisper API  
-- Extract route number, route name, and stop place from the transcription  
-- Return structured data as JSON
+- Transcription of Norwegian speech to text via OpenAI's Whisper
+- Conversation handling through the concept of Dialog state tracking (DST)
+- Recognition of user intents with the help of AI reasoning
+- Utilizing Entur's API services to fetch the desired data (Currently Ruter-operated vehicles in Oslo are supported for now)
+- A natural user experience through LLM generated responses.
 
 ---
 
 ## Prerequisites
 
-- Python 3.8+  
+- Python 3.8+
 - Docker (optional)  
-- OpenAI API key (An API-key from OpenAI is necessary to be able to perform requests to Whisper)
+- OpenAI API key (An API-key from OpenAI is necessary to be able to perform requests to the Whisper and GPT models)
 
 ---
 
-## Getting Started
+## Getting started
 
 1. Clone the repo  
    ```bash
@@ -26,7 +32,7 @@ API for TaleReise which uses OpenAI Whisper and a fine-tuned BERT NER model to i
    cd talereise-api
 
 
-2. Install dependencies
+2. Install the dependencies required
     ```bash
     pip install --upgrade pip
     pip install -r requirements.txt
@@ -48,4 +54,5 @@ API for TaleReise which uses OpenAI Whisper and a fine-tuned BERT NER model to i
     uvicorn app.server:app --reload --host 0.0.0.0 --port 8000
     ```
 
-5. Test with Swagger UI at localhost:8000/docs
+
+5. Test with audio input through Swagger UI at localhost:8000/docs
